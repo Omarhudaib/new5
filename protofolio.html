@@ -10,53 +10,229 @@
       --accent:#5B9AC5; --accent2:#2ec4b6; --ring:#213146;
     }
     *{box-sizing:border-box} html,body{height:100%}
-    body{margin:0; background:linear-gradient(160deg,#0b0e13 0%,#0e1420 60%,#0b0e13 100%); color:var(--text); font:14.5px/1.6 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial}
+    body{
+      margin:0; 
+      background:linear-gradient(160deg,#0b0e13 0%,#0e1420 60%,#0b0e13 100%); 
+      color:var(--text); 
+      font:14.5px/1.6 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;
+      overflow-x: hidden;
+    }
     .wrap{max-width:1400px; margin:auto; padding:24px}
-    header{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px}
-    .title{font-weight:900; letter-spacing:.3px; font-size:20px}
+    header{
+      display:flex; 
+      align-items:center; 
+      justify-content:space-between; 
+      gap:16px; 
+      flex-wrap:wrap; 
+      margin-bottom:18px
+    }
+    .title{
+      font-weight:900; 
+      letter-spacing:.3px; 
+      font-size:20px;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
     .controls{display:flex; gap:10px; flex-wrap:wrap}
     .input,.btn{
-      background:#0f1422; border:1px solid #1f2a3d; color:var(--text);
-      padding:10px 12px; border-radius:10px; outline:none;
+      background:#0f1422; 
+      border:1px solid #1f2a3d; 
+      color:var(--text);
+      padding:10px 12px; 
+      border-radius:10px; 
+      outline:none;
+      transition: all 0.2s ease;
     }
-    .input:focus{border-color:var(--ring); box-shadow:0 0 0 3px rgba(91,154,197,.15)}
-    .btn{cursor:pointer; transition:.2s}
-    .btn:hover{border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,154,197,.15)}
-    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#09202a; font-weight:900}
-    .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px}
-    @media (max-width:1200px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
-    @media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+    .input:focus{
+      border-color:var(--ring); 
+      box-shadow:0 0 0 3px rgba(91,154,197,.15)
+    }
+    .btn{
+      cursor:pointer;
+    }
+    .btn:hover{
+      border-color:var(--accent); 
+      box-shadow:0 0 0 3px rgba(91,154,197,.15);
+      transform: translateY(-2px);
+    }
+    .btn.primary{
+      background:linear-gradient(90deg, var(--accent), var(--accent2)); 
+      color:#09202a; 
+      font-weight:900;
+      border: none;
+    }
+    .grid{
+      display:grid; 
+      grid-template-columns:repeat(auto-fill, minmax(380px, 1fr)); 
+      gap:20px;
+    }
+    @media (max-width:1200px){ 
+      .grid{grid-template-columns:repeat(2, minmax(0,1fr));} 
+    }
+    @media (max-width:720px){ 
+      .grid{grid-template-columns:1fr;} 
+    }
 
     .card{
       background:linear-gradient(180deg,#111522 0%, #0d121e 100%);
-      border:1px solid #1b2640; border-radius:16px; overflow:hidden;
-      box-shadow:0 10px 30px rgba(0,0,0,.25); display:flex; flex-direction:column;
+      border:1px solid #1b2640; 
+      border-radius:16px; 
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.25); 
+      display:flex; 
+      flex-direction:column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
     .thumb{
-      position:relative; width:100%; aspect-ratio:16/9; background:#0b111d; overflow:hidden;
+      position:relative; 
+      width:100%; 
+      aspect-ratio:16/9; 
+      background:#0b111d; 
+      overflow:hidden;
     }
     .thumb img{
-      width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.05) contrast(1.02);
+      width:100%; 
+      height:100%; 
+      object-fit:cover; 
+      display:block; 
+      filter:saturate(1.05) contrast(1.02);
+      transition: transform 0.5s ease;
+    }
+    .card:hover .thumb img {
+      transform: scale(1.05);
     }
     .thumb .badge{
-      position:absolute; top:10px; inset-inline-start:10px;
+      position:absolute; 
+      top:10px; 
+      inset-inline-start:10px;
       background:linear-gradient(90deg, var(--accent), var(--accent2));
-      color:#081018; font-weight:800; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #18283a;
+      color:#081018; 
+      font-weight:800; 
+      padding:4px 10px; 
+      border-radius:999px; 
+      font-size:12px; 
+      border:1px solid #18283a;
+      z-index: 2;
     }
     .thumb .open{
-      position:absolute; bottom:10px; inset-inline-end:10px;
-      background:#0f182a; border:1px solid #24334d; color:var(--text);
-      padding:8px 10px; border-radius:10px; font-size:12.5px; text-decoration:none;
+      position:absolute; 
+      bottom:10px; 
+      inset-inline-end:10px;
+      background:#0f182a; 
+      border:1px solid #24334d; 
+      color:var(--text);
+      padding:8px 10px; 
+      border-radius:10px; 
+      font-size:12.5px; 
+      text-decoration:none;
+      z-index: 2;
+      transition: all 0.2s ease;
     }
-    .thumb .open:hover{border-color:var(--accent)}
-    .meta{display:flex; align-items:center; gap:10px; padding:10px 12px; border-top:1px solid #1b2640; background:#0e1524}
-    .favicon{width:16px; height:16px; border-radius:4px; background:#0b111d}
+    .thumb .open:hover{
+      border-color:var(--accent);
+      background: var(--accent);
+      color: #081018;
+    }
+    .meta{
+      display:flex; 
+      align-items:center; 
+      gap:10px; 
+      padding:10px 12px; 
+      border-top:1px solid #1b2640; 
+      background:#0e1524
+    }
+    .favicon{
+      width:16px; 
+      height:16px; 
+      border-radius:4px; 
+      background:#0b111d;
+      object-fit: cover;
+    }
     .info{min-width:0; flex:1}
-    .name{font-weight:800; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .url{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-    .actions{display:flex; gap:8px; padding:10px 12px; background:#0e1524; border-top:1px solid #1b2640}
-    .btn.small{padding:8px 10px; font-size:12.5px}
-    footer{opacity:.65; margin-top:18px; text-align:center; font-size:12px}
+    .name{
+      font-weight:800; 
+      font-size:14px; 
+      white-space:nowrap; 
+      overflow:hidden; 
+      text-overflow:ellipsis
+    }
+    .url{
+      font-size:12px; 
+      color:var(--muted); 
+      white-space:nowrap; 
+      overflow:hidden; 
+      text-overflow:ellipsis
+    }
+    .actions{
+      display:flex; 
+      gap:8px; 
+      padding:10px 12px; 
+      background:#0e1524; 
+      border-top:1px solid #1b2640
+    }
+    .btn.small{
+      padding:8px 10px; 
+      font-size:12.5px;
+      flex: 1;
+      text-align: center;
+    }
+    footer{
+      opacity:.65; 
+      margin-top:18px; 
+      text-align:center; 
+      font-size:12px
+    }
+    
+    /* تحسينات إضافية */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background: #0b111d;
+    }
+    
+    .loading:after {
+      content: "";
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(91, 154, 197, 0.2);
+      border-left-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .status {
+      position: absolute;
+      top: 10px;
+      inset-inline-end: 10px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      z-index: 2;
+    }
+    
+    .status.online {
+      background: rgba(46, 196, 182, 0.2);
+      color: var(--accent2);
+      border: 1px solid rgba(46, 196, 182, 0.3);
+    }
+    
+    .status.offline {
+      background: rgba(255, 77, 77, 0.2);
+      color: #ff4d4d;
+      border: 1px solid rgba(255, 77, 77, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -78,22 +254,22 @@
   <script>
     // مواقعك
     const SITES = [
-      { name: "Dawwam — HR SaaS (Alpha)", url: "https://dawwam-alpha.vercel.app/" },
+      { name: "Dawwam — HR SaaS (Alpha)", url: "https://new-hr-sys-1.vercel.app/" },
       { name: "Maharathub",               url: "https://www.maharathub.com/" },
       { name: "Lyon — Booking Front",     url: "https://booking-front.lyon-jo.com/" },
-      { name: "New Orange Land",          url: "https://neworange-land.vercel.app/" },
-      { name: "New5 (1hle)",              url: "https://new5-1hle.vercel.app/" },
+      { name: "Orange Land",          url: "https://neworange-land.vercel.app/" },
+      { name: "Land (1hle)",              url: "https://new5-1hle.vercel.app/" },
       { name: "Land ENG",                 url: "https://landeng.vercel.app/" },
-      { name: "New Copy Three",           url: "https://new-copy-three.vercel.app/" },
+      { name: "Land Copy Three",           url: "https://new-copy-three.vercel.app/" },
       { name: "UltraFast Landing (EN)",   url: "https://ultrafast-landing.vercel.app/en" },
       { name: "Personal Portfolio (Vite)",url: "https://my-app-chi-snowy-80.vercel.app/" },
     ];
 
     // مولّد صورة المعاينة (سكرينشوت) — خدمة مجانية بسيطة
     function screenshotURL(url){
-      // استخدام خدمة mshots من ووردبريس
+      // استخدام خدمة Microlink API المجانية مع كاش متغير
       const seed = Date.now().toString().slice(-6);
-      return `https://s0.wp.com/mshots/v1/${encodeURIComponent(url)}?w=1000&v=${seed}`;
+      return `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url&v=${seed}`;
     }
 
     // فافيكون
@@ -102,6 +278,19 @@
         const u = new URL(url);
         return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
       }catch{return "";}
+    }
+
+    // التحقق من حالة الموقع
+    async function checkStatus(url) {
+      try {
+        const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, {
+          method: 'HEAD',
+          mode: 'no-cors'
+        });
+        return 'online';
+      } catch (e) {
+        return 'offline';
+      }
     }
 
     const grid = document.getElementById("grid");
@@ -117,56 +306,106 @@
 
       const thumb = document.createElement("div");
       thumb.className = "thumb";
+      
+      const loading = document.createElement("div");
+      loading.className = "loading";
+      
       const img = document.createElement("img");
       img.alt = `Preview of ${site.name}`;
-      img.src = screenshotURL(site.url);
-
-      // إضافة معالج خطأ للصورة
-      img.onerror = function() {
-        // إذا فشل تحميل الصورة، نعرض صورة بديلة (يمكنك تغييرها)
-        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI1NjIiIHZpZXdCb3g9IjAgMCAxMDAwIDU2MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMDAiIGhlaWdodD0iNTYyIiBmaWxsPSIjMEIxMTIwIi8+CjxwYXRoIGQ9Ik0zNzUgMjgxTDUyMCA0MjZMNjY1IDI4MUg2MjVWMjgxSDM3NVoiIGZpbGw9IiMxRjJBMzkiLz4KPHN0cm9rZSBkPSJNMzc1IDI4MUw1MjAgNDI2TDY2NSAyODFINSIgc3Ryb2tlPSIjMUYyQTM5IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cg==';
+      img.style.display = 'none';
+      
+      // تحميل الصورة مع معالجة الأخطاء
+      const imageLoader = new Image();
+      imageLoader.onload = function() {
+        loading.style.display = 'none';
+        img.style.display = 'block';
+        img.src = this.src;
       };
+      imageLoader.onerror = function() {
+        loading.style.display = 'none';
+        img.style.display = 'block';
+        img.src = `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI1NjIiIHZpZXdCb3g9IjAgMCAxMDAwIDU2MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMDAiIGhlaWdodD0iNTYyIiBmaWxsPSIjMEIxMTIwIi8+CjxwYXRoIGQ9Ik0zNzUgMjgxTDUyMCA0MjZMNjY1IDI4MUg2MjVWMjgxSDM3NVoiIGZpbGw9IiMxRjJBMzkiLz4KPHN0cm9rZSBkPSJNMzc1IDI4MUw1MjAgNDI2TDY2NSAyODFINSIgc3Ryb2tlPSIjMUYyQTM5IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cg==`;
+      };
+      imageLoader.src = screenshotURL(site.url);
 
       const badge = document.createElement("span");
       badge.className = "badge";
       badge.textContent = `#${String(i+1).padStart(2,"0")}`;
 
+      const status = document.createElement("div");
+      status.className = "status";
+      status.textContent = "جار التحميل...";
+      
+      // التحقق من حالة الموقع
+      checkStatus(site.url).then(statusText => {
+        status.textContent = statusText === 'online' ? 'متصل' : 'غير متصل';
+        status.className = `status ${statusText}`;
+      });
+
       const open = document.createElement("a");
       open.className = "open";
-      open.href = site.url; open.target = "_blank"; open.rel = "noopener";
+      open.href = site.url; 
+      open.target = "_blank"; 
+      open.rel = "noopener noreferrer";
       open.textContent = "Open";
 
-      thumb.append(img, badge, open);
+      thumb.append(loading, img, badge, status, open);
 
       const meta = document.createElement("div");
       meta.className = "meta";
       const fav = document.createElement("img");
-      fav.className = "favicon"; fav.src = faviconURL(site.url); fav.alt = "";
+      fav.className = "favicon"; 
+      fav.src = faviconURL(site.url); 
+      fav.alt = "";
+      fav.onerror = function() {
+        this.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiBmaWxsPSIjMEIxMTIwIi8+CjxwYXRoIGQ9Ik04IDRMMTIgOEg0TDggNFoiIGZpbGw9IiMxRjJBMzkiLz4KPC9zdmc+Cg==";
+      };
+      
       const info = document.createElement("div");
       info.className = "info";
       const name = document.createElement("div");
-      name.className = "name"; name.textContent = site.name;
+      name.className = "name"; 
+      name.textContent = site.name;
       const url = document.createElement("div");
-      url.className = "url"; url.textContent = site.url;
+      url.className = "url"; 
+      url.textContent = site.url;
       info.append(name, url);
       meta.append(fav, info);
 
       const actions = document.createElement("div");
       actions.className = "actions";
       const btnOpen = document.createElement("a");
-      btnOpen.className = "btn primary small"; btnOpen.href = site.url; btnOpen.target = "_blank"; btnOpen.rel="noopener"; btnOpen.textContent = "Open";
+      btnOpen.className = "btn primary small"; 
+      btnOpen.href = site.url; 
+      btnOpen.target = "_blank"; 
+      btnOpen.rel="noopener noreferrer"; 
+      btnOpen.textContent = "فتح الموقع";
+      
       const btnCopy = document.createElement("button");
-      btnCopy.className = "btn small"; btnCopy.textContent = "Copy URL";
+      btnCopy.className = "btn small"; 
+      btnCopy.textContent = "نسخ الرابط";
       btnCopy.addEventListener("click", async ()=> {
-        try{ await navigator.clipboard.writeText(site.url); btnCopy.textContent="Copied!"; setTimeout(()=>btnCopy.textContent="Copy URL",900); }
-        catch{ btnCopy.textContent="Failed"; setTimeout(()=>btnCopy.textContent="Copy URL",900); }
+        try{ 
+          await navigator.clipboard.writeText(site.url); 
+          btnCopy.textContent="تم النسخ!";
+          setTimeout(()=>btnCopy.textContent="نسخ الرابط", 1500); 
+        }
+        catch{ 
+          btnCopy.textContent="فشل النسخ"; 
+          setTimeout(()=>btnCopy.textContent="نسخ الرابط", 1500); 
+        }
       });
+      
       const btnReload = document.createElement("button");
-      btnReload.className = "btn small"; btnReload.textContent = "Refresh";
-      btnReload.addEventListener("click", ()=> { img.src = screenshotURL(site.url); });
+      btnReload.className = "btn small"; 
+      btnReload.textContent = "تحديث";
+      btnReload.addEventListener("click", ()=> { 
+        loading.style.display = 'flex';
+        img.style.display = 'none';
+        imageLoader.src = screenshotURL(site.url);
+      });
 
       actions.append(btnOpen, btnReload, btnCopy);
-
       card.append(thumb, meta, actions);
       return card;
     }
@@ -187,10 +426,27 @@
     q.addEventListener("input", applyFilter);
     refresh.addEventListener("click", ()=>{
       grid.querySelectorAll(".thumb img").forEach(img=>{
-        const base = img.closest(".card").dataset.url;
-        img.src = screenshotURL(base);
+        const card = img.closest(".card");
+        const loading = card.querySelector(".loading");
+        const image = card.querySelector("img");
+        
+        loading.style.display = 'flex';
+        image.style.display = 'none';
+        
+        const newImage = new Image();
+        newImage.onload = function() {
+          loading.style.display = 'none';
+          image.style.display = 'block';
+          image.src = this.src;
+        };
+        newImage.onerror = function() {
+          loading.style.display = 'none';
+          image.style.display = 'block';
+        };
+        newImage.src = screenshotURL(card.dataset.url);
       });
     });
+    
     openAll.addEventListener("click", (e)=>{
       e.preventDefault();
       SITES.forEach(s=> window.open(s.url, "_blank", "noopener"));
