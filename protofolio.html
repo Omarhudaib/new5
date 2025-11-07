@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>لوحة عرض المشاريع — كروت شغّالة دائمًا</title>
+  <style>
+    :root{
+      --bg:#0b0e13; --card:#111520; --muted:#9aa4b2; --text:#e7ecf3;
+      --accent:#5B9AC5; --accent2:#2ec4b6; --ring:#213146;
+    }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0; background:linear-gradient(160deg,#0b0e13 0%,#0e1420 60%,#0b0e13 100%); color:var(--text); font:14.5px/1.6 ui-sans-serif,system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:1400px; margin:auto; padding:24px}
+    header{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px}
+    .title{font-weight:900; letter-spacing:.3px; font-size:20px}
+    .controls{display:flex; gap:10px; flex-wrap:wrap}
+    .input,.btn{
+      background:#0f1422; border:1px solid #1f2a3d; color:var(--text);
+      padding:10px 12px; border-radius:10px; outline:none;
+    }
+    .input:focus{border-color:var(--ring); box-shadow:0 0 0 3px rgba(91,154,197,.15)}
+    .btn{cursor:pointer; transition:.2s}
+    .btn:hover{border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,154,197,.15)}
+    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent2)); color:#09202a; font-weight:900}
+    .grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px}
+    @media (max-width:1200px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
+    @media (max-width:720px){ .grid{grid-template-columns:1fr;} }
+
+    .card{
+      background:linear-gradient(180deg,#111522 0%, #0d121e 100%);
+      border:1px solid #1b2640; border-radius:16px; overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,.25); display:flex; flex-direction:column;
+    }
+    .thumb{
+      position:relative; width:100%; aspect-ratio:16/9; background:#0b111d; overflow:hidden;
+    }
+    .thumb img{
+      width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.05) contrast(1.02);
+    }
+    .thumb .badge{
+      position:absolute; top:10px; inset-inline-start:10px;
+      background:linear-gradient(90deg, var(--accent), var(--accent2));
+      color:#081018; font-weight:800; padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #18283a;
+    }
+    .thumb .open{
+      position:absolute; bottom:10px; inset-inline-end:10px;
+      background:#0f182a; border:1px solid #24334d; color:var(--text);
+      padding:8px 10px; border-radius:10px; font-size:12.5px; text-decoration:none;
+    }
+    .thumb .open:hover{border-color:var(--accent)}
+    .meta{display:flex; align-items:center; gap:10px; padding:10px 12px; border-top:1px solid #1b2640; background:#0e1524}
+    .favicon{width:16px; height:16px; border-radius:4px; background:#0b111d}
+    .info{min-width:0; flex:1}
+    .name{font-weight:800; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .url{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .actions{display:flex; gap:8px; padding:10px 12px; background:#0e1524; border-top:1px solid #1b2640}
+    .btn.small{padding:8px 10px; font-size:12.5px}
+    footer{opacity:.65; margin-top:18px; text-align:center; font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">لوحة عرض المشاريع — كروت بدون iFrame</div>
+      <div class="controls">
+        <input id="q" class="input" placeholder="ابحث بالاسم أو الرابط…" />
+        <button id="refresh" class="btn">تحديث الصور</button>
+        <a id="openAll" class="btn primary" href="#" target="_blank" rel="noopener">فتح الكل</a>
+      </div>
+    </header>
+
+    <div id="grid" class="grid"></div>
+
+    <footer>ملاحظة: العرض صور معاينة مباشرة + زر Open. بدون iFrame لتفادي أي حظر.</footer>
+  </div>
+
+  <script>
+    // مواقعك
+    const SITES = [
+      { name: "Dawwam — HR SaaS (Alpha)", url: "https://dawwam-alpha.vercel.app/" },
+      { name: "Maharathub",               url: "https://www.maharathub.com/" },
+      { name: "Lyon — Booking Front",     url: "https://booking-front.lyon-jo.com/" },
+      { name: "New Orange Land",          url: "https://neworange-land.vercel.app/" },
+      { name: "New5 (1hle)",              url: "https://new5-1hle.vercel.app/" },
+      { name: "Land ENG",                 url: "https://landeng.vercel.app/" },
+      { name: "New Copy Three",           url: "https://new-copy-three.vercel.app/" },
+      { name: "UltraFast Landing (EN)",   url: "https://ultrafast-landing.vercel.app/en" },
+      { name: "Personal Portfolio (Vite)",url: "https://my-app-chi-snowy-80.vercel.app/" },
+    ];
+
+    // مولّد صورة المعاينة (سكرينشوت) — خدمة مجانية بسيطة
+    function screenshotURL(url){
+      // استخدام خدمة mshots من ووردبريس
+      const seed = Date.now().toString().slice(-6);
+      return `https://s0.wp.com/mshots/v1/${encodeURIComponent(url)}?w=1000&v=${seed}`;
+    }
+
+    // فافيكون
+    function faviconURL(url){
+      try{
+        const u = new URL(url);
+        return `https://www.google.com/s2/favicons?domain=${u.hostname}&sz=64`;
+      }catch{return "";}
+    }
+
+    const grid = document.getElementById("grid");
+    const q = document.getElementById("q");
+    const refresh = document.getElementById("refresh");
+    const openAll = document.getElementById("openAll");
+
+    function makeCard(site, i){
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.name = site.name.toLowerCase();
+      card.dataset.url = site.url.toLowerCase();
+
+      const thumb = document.createElement("div");
+      thumb.className = "thumb";
+      const img = document.createElement("img");
+      img.alt = `Preview of ${site.name}`;
+      img.src = screenshotURL(site.url);
+
+      // إضافة معالج خطأ للصورة
+      img.onerror = function() {
+        // إذا فشل تحميل الصورة، نعرض صورة بديلة (يمكنك تغييرها)
+        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwMCIgaGVpZ2h0PSI1NjIiIHZpZXdCb3g9IjAgMCAxMDAwIDU2MiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwMDAiIGhlaWdodD0iNTYyIiBmaWxsPSIjMEIxMTIwIi8+CjxwYXRoIGQ9Ik0zNzUgMjgxTDUyMCA0MjZMNjY1IDI4MUg2MjVWMjgxSDM3NVoiIGZpbGw9IiMxRjJBMzkiLz4KPHN0cm9rZSBkPSJNMzc1IDI4MUw1MjAgNDI2TDY2NSAyODFINSIgc3Ryb2tlPSIjMUYyQTM5IiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+Cg==';
+      };
+
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = `#${String(i+1).padStart(2,"0")}`;
+
+      const open = document.createElement("a");
+      open.className = "open";
+      open.href = site.url; open.target = "_blank"; open.rel = "noopener";
+      open.textContent = "Open";
+
+      thumb.append(img, badge, open);
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      const fav = document.createElement("img");
+      fav.className = "favicon"; fav.src = faviconURL(site.url); fav.alt = "";
+      const info = document.createElement("div");
+      info.className = "info";
+      const name = document.createElement("div");
+      name.className = "name"; name.textContent = site.name;
+      const url = document.createElement("div");
+      url.className = "url"; url.textContent = site.url;
+      info.append(name, url);
+      meta.append(fav, info);
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+      const btnOpen = document.createElement("a");
+      btnOpen.className = "btn primary small"; btnOpen.href = site.url; btnOpen.target = "_blank"; btnOpen.rel="noopener"; btnOpen.textContent = "Open";
+      const btnCopy = document.createElement("button");
+      btnCopy.className = "btn small"; btnCopy.textContent = "Copy URL";
+      btnCopy.addEventListener("click", async ()=> {
+        try{ await navigator.clipboard.writeText(site.url); btnCopy.textContent="Copied!"; setTimeout(()=>btnCopy.textContent="Copy URL",900); }
+        catch{ btnCopy.textContent="Failed"; setTimeout(()=>btnCopy.textContent="Copy URL",900); }
+      });
+      const btnReload = document.createElement("button");
+      btnReload.className = "btn small"; btnReload.textContent = "Refresh";
+      btnReload.addEventListener("click", ()=> { img.src = screenshotURL(site.url); });
+
+      actions.append(btnOpen, btnReload, btnCopy);
+
+      card.append(thumb, meta, actions);
+      return card;
+    }
+
+    function render(list){
+      grid.innerHTML = "";
+      list.forEach((s,i)=> grid.appendChild(makeCard(s,i)));
+    }
+
+    function applyFilter(){
+      const term = (q.value||"").toLowerCase().trim();
+      [...grid.children].forEach(card=>{
+        const hit = card.dataset.name.includes(term) || card.dataset.url.includes(term);
+        card.style.display = hit ? "" : "none";
+      });
+    }
+
+    q.addEventListener("input", applyFilter);
+    refresh.addEventListener("click", ()=>{
+      grid.querySelectorAll(".thumb img").forEach(img=>{
+        const base = img.closest(".card").dataset.url;
+        img.src = screenshotURL(base);
+      });
+    });
+    openAll.addEventListener("click", (e)=>{
+      e.preventDefault();
+      SITES.forEach(s=> window.open(s.url, "_blank", "noopener"));
+    });
+
+    render(SITES);
+  </script>
+</body>
+</html>
